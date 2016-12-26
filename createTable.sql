@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS COMPORTE;
 DROP TABLE IF EXISTS CLASSEMENT;
+DROP TABLE IF EXISTS ANCIENNOM;
 DROP TABLE IF EXISTS SKIEUR;
 DROP TABLE IF EXISTS COMPETITION;
 DROP TABLE IF EXISTS STATION;
@@ -80,7 +81,19 @@ CREATE TABLE COMPORTE(
 	CONSTRAINT fk_comporte_specialite
 		FOREIGN KEY (idSpecialite)
 		REFERENCES SPECIALITE(idSpecialite)
-);	
+);
+
+CREATE TABLE ANCIENNOM(
+	noSkieur INT,
+	ancienNom varchar(50),
+	dateChangement date,
+
+	CONSTRAINT pk_Anciennom
+	 	PRIMARY KEY(noSkieur),
+	CONSTRAINT fk_noSkieur_noSkieur
+		FOREIGN KEY (noSkieur)
+		REFERENCES SKIEUR(noSkieur)
+);
 
 
 insert into SPECIALITE values (default,'freestyle');
@@ -126,6 +139,9 @@ insert into COMPORTE values(1,2);
 insert into COMPORTE values(2,2);
 insert into COMPORTE values(3,1);
 insert into COMPORTE values(4,1);
+
+
+
 
 --  Nombre de skieurs ayant participé à au moins une compétition.
 select count(distinct noSkieur)

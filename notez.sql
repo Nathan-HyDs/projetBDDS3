@@ -51,4 +51,44 @@ $$
 			return resultat.classement;
 		end LOOP;
 	end;
-	$$ language plpgsql;
+$$ language plpgsql;
+
+
+/*
+sauvegarde des anciens nom de SKIEUR dans ANCIENNOM
+ */
+
+CREATE OR REPLACE FUNCTION save_nom() RETURNS TRIGGER AS $ANCIENNOM$
+
+DECLARE
+	exist BOOLEAN;
+	c1 CURSOR FOR SELECT EXISTS(SELECT a.noSkieur FROM ANCIENNOM as a WHERE a.noSkieur=OLD.noSkieur) AS answer;
+	save BOOLEAN;
+BEGIN
+
+	save=not (OLD.nomSkieur = NEW.nomSkieur);
+	IF not save THEN
+		RETURN NULL;
+	END IF;
+
+	exist=FALSE;
+	for resultat in c1 LOOP
+		IF (resultat.answer) THEN
+			exist=TRUE;
+		END IF;
+	end LOOP;
+
+	IF (exist) THEN
+		UPDATE ANCIENNOM SET ancienNom=OLD.nomSkieur, dateChangement=now() WHERE noSkieur=OLD.noSkieur;
+		RETURN OLD;
+	ELSE
+		INSERT INTO ANCIENNOM SELECT OLD.noSkieur, OLD.nomSkieur, now();
+    RETURN OLD;
+	END IF;
+  RETURN NULL;
+END;
+$ANCIENNOM$ language plpgsql;
+
+CREATE TRIGGER ANCIENNOM AFTER UPDATE ON SKIEUR
+FOR EACH ROW
+EXECUTE PROCEDURE save_nom();
