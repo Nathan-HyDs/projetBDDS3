@@ -55,6 +55,36 @@ $$ language plpgsql;
 
 
 /*
+verification des inserts de station
+ */
+
+
+CREATE OR REPLACE FUNCTION check_insert_station() RETURNS TRIGGER AS $STATION$
+
+DECLARE
+	good BOOLEAN;
+BEGIN
+	IF NEW.altitude ISNULL OR NEW.idStation ISNULL OR NEW.nomStation ISNULL OR NEW.pays ISNULL THEN
+		good = FALSE ;
+	ELSE
+		good = new.altitude >= 0;
+	END IF;
+
+	IF good THEN
+		RETURN NEW;
+	ELSE
+		RAISE WARNING 'invalid insert';
+		RETURN NULL;
+	END IF;
+
+END;
+$STATION$ language plpgsql;
+
+CREATE TRIGGER STATION BEFORE INSERT ON STATION
+FOR EACH ROW
+EXECUTE PROCEDURE check_insert_station();
+
+/*
 sauvegarde des anciens nom de SKIEUR dans ANCIENNOM
  */
 

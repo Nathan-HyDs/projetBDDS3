@@ -142,7 +142,6 @@ insert into COMPORTE values(4,1);
 
 
 
-
 --  Nombre de skieurs ayant participé à au moins une compétition.
 select count(distinct noSkieur)
 from CLASSEMENT;
