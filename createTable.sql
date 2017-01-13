@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS DECLASSEMENT;
 DROP TABLE IF EXISTS COMPORTE;
 DROP TABLE IF EXISTS CLASSEMENT;
 DROP TABLE IF EXISTS ANCIENNOM;
@@ -95,6 +96,21 @@ CREATE TABLE ANCIENNOM(
 		REFERENCES SKIEUR(noSkieur)
 );
 
+CREATE TABLE DECLASSEMENT(
+	noSkieur INT,
+	idCompet INT,
+	
+	CONSTRAINT pk_Declassement
+	 	PRIMARY KEY(noSkieur,idCompet),
+	CONSTRAINT fk_declassement_skieur
+		FOREIGN KEY (noSkieur)
+		REFERENCES SKIEUR(noSkieur),
+CONSTRAINT fk_declassement_compet
+		FOREIGN KEY (idCompet)
+		REFERENCES COMPETITION(idCompet)
+);
+
+
 
 insert into SPECIALITE values (default,'freestyle');
 insert into SPECIALITE values (default,'descente');
@@ -122,12 +138,12 @@ insert into CLASSEMENT values(5,1,3);
 insert into CLASSEMENT values(3,1,4);
 insert into CLASSEMENT values(2,1,5);
 
-insert into CLASSEMENT values(2,4,1);
-insert into CLASSEMENT values(2,2,2);
-insert into CLASSEMENT values(2,1,3);
+insert into CLASSEMENT values(2,2,1);
+insert into CLASSEMENT values(5,2,2);
+insert into CLASSEMENT values(3,2,3);
 
-insert into CLASSEMENT values(3,5,1);
-insert into CLASSEMENT values(3,3,2);
+insert into CLASSEMENT values(3,3,1);
+insert into CLASSEMENT values(4,3,2);
 
 insert into CLASSEMENT values(5,4,1);
 insert into CLASSEMENT values(3,4,2);
@@ -141,7 +157,11 @@ insert into COMPORTE values(3,1);
 insert into COMPORTE values(4,1);
 
 
+insert into DECLASSEMENT values(1,1);
+insert into DECLASSEMENT values(4,4);
 
+
+/*
 --  Nombre de skieurs ayant participé à au moins une compétition.
 select count(distinct noSkieur)
 from CLASSEMENT;
@@ -161,4 +181,4 @@ from competition co INNER JOIN Station st
 						ON st.idStation=co.idStation
 					INNER JOIN skieur sk
 						ON sk.idStation=st.idStation
-where st.nomStation like 'Tignes' and ;
+where st.nomStation like 'Tignes' and ;*/

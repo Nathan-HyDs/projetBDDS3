@@ -1,3 +1,6 @@
+/*
+* Question 1
+*/
 create or replace function averageAlti() returns numeric as
 	$$
 	declare
@@ -11,6 +14,9 @@ create or replace function averageAlti() returns numeric as
 	end;
 	$$ language plpgsql;	
 
+/*
+* Question 2
+*/
 create or replace function formalisePrenom(nom varchar) returns text as
 	$$
 	begin
@@ -19,6 +25,10 @@ create or replace function formalisePrenom(nom varchar) returns text as
 	$$ language plpgsql;
 
 
+
+/*
+* Question 3
+*/
 create or replace function formalisePrenomBase() returns setof record as
 $$
 	declare
@@ -52,6 +62,86 @@ $$
 		end LOOP;
 	end;
 $$ language plpgsql;
+
+
+/*
+* chercher la place d'un skieur
+*/
+create or replace function searchPlace(skieur int,compet int) returns int as
+$$
+	declare
+		c2 CURSOR for
+			select cl.classement 
+			from classement as cl
+			where idCompet=compet and noSkieur=skieur;
+		begin
+		for resultat in c2 LOOP
+			return resultat.classement;
+		end loop;	
+		end;	
+$$ language plpgsql;
+
+
+/*
+* Swap places of skieur
+*/
+create or replace function decaleSkieur(skieurid int,compet int, placeADeclasser int, lastPlace int) returns int as
+$$
+	declare
+		compteur int;
+	begin
+
+		for compteur in (placeADeclasser+1) .. lastPlace LOOP
+			update classement set classement=(compteur-1) where classement=compteur and idCompet=compet;
+		END LOOP;
+    update classement set classement=lastPlace where noskieur=skieurid and idcompet=compet;
+		return compteur;
+	end;
+$$ language plpgsql;
+
+/*
+* Question 4
+*/
+create or replace function declassement() returns setof record as 
+	$$
+		declare
+			c CURSOR FOR
+				select *
+				from declassement;
+			skieurPlace int;
+			lastPlace int;
+			nbModif int;
+		begin
+		for resultat in c LOOP
+			skieurPlace:= searchPlace(resultat.noSkieur,resultat.idCompet);
+			lastPlace:=findLastPlace(resultat.idCompet);
+      RAISE INFO 'decaleSkieur(%,%,%,%);',resultat.noSkieur,resultat.idCompet,skieurPlace,lastPlace;
+			nbModif:=decaleSkieur(resultat.noSkieur,resultat.idCompet,skieurPlace,lastPlace);
+		end loop;
+		return;
+		end;	
+$$ language plpgsql;
+
+
+select declassement();
+/*
+select decaleSkieur(3,1,4,5);
+select searchPlace(4,1);
+select findLastPlace(1);*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*
