@@ -126,11 +126,11 @@ insert into COMPETITION values (default,'B','2012-12-10',1);
 insert into COMPETITION values (default,'C','2011-07-24',3);
 insert into COMPETITION values (default,'D','2016-09-06',2);
 
-insert into SKIEUR values(default,'Bob',1,1);
-insert into SKIEUR values(default,'Jeremy',2,2);
+insert into SKIEUR values(default,'BOb',1,1);
+insert into SKIEUR values(default,'JeRemY',2,2);
 insert into SKIEUR values(default,'Tom',3,3);
-insert into SKIEUR values(default,'Luc',3,4);
-insert into SKIEUR values(default,'Guillaume',2,2);	
+insert into SKIEUR values(default,'lUc',3,4);
+insert into SKIEUR values(default,'GuIllAUme',2,2);
 
 insert into CLASSEMENT values(1,1,1);
 insert into CLASSEMENT values(4,1,2);
