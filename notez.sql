@@ -32,11 +32,11 @@ create or replace function formalisePrenom(nom varchar) returns text as
 create or replace function formalisePrenomBase() returns setof record as
 $$
 	declare
-		c1 CURSOR FOR
+		skieurs CURSOR FOR
 			select s.nomSkieur as nom, s.noSkieur as no
 			from SKIEUR as s;
 	begin
-	for resultat in c1 LOOP
+	for resultat in skieurs LOOP
 		update SKIEUR
 		set nomSkieur=formalisePrenom(resultat.nom)
 		where noSkieur=resultat.no;
