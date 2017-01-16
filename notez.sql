@@ -144,10 +144,9 @@ select findLastPlace(1);*/
 
 
 
-/*
+/* exercice 5
 verification des inserts de station
  */
-
 
 CREATE OR REPLACE FUNCTION check_insert_station() RETURNS TRIGGER AS $STATION$
 
@@ -163,7 +162,7 @@ BEGIN
 	IF good THEN
 		RETURN NEW;
 	ELSE
-		RAISE WARNING 'invalid insert';
+		RAISE EXCEPTION 'invalid insert in table sation';
 		RETURN NULL;
 	END IF;
 
@@ -174,7 +173,9 @@ CREATE TRIGGER STATION BEFORE INSERT ON STATION
 FOR EACH ROW
 EXECUTE PROCEDURE check_insert_station();
 
-/*
+
+
+/* exercice 6
 sauvegarde des anciens nom de SKIEUR dans ANCIENNOM
  */
 
